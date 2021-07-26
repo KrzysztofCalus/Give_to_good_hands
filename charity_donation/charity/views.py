@@ -1,5 +1,6 @@
 from django.db.models import Sum
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -26,6 +27,16 @@ class RegisterView(View):
     def get(self, request):
         return render(request, "register.html")
 
+    def post(self, request):
+        name = request.POST.get("name")
+        surname = request.POST.get("surname")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        password2 = request.POST.get("password2")
+        if password == password2:
+            User.objects.create_user(username=email, email=email, password=password,
+                                     first_name=name, last_name=surname)
+        return redirect('login')
 
 class LoginView(View):
     def get(self, request):
