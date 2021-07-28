@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 # Create your views here.
 from django.views import View
 
-from charity.models import Donation, Institution
+from charity.models import Donation, Institution, Category
 
 
 def logout_view(request):
@@ -60,19 +60,12 @@ class LoginView(View):
             return redirect('register')
 
 
-# class LogoutView(View):
-#     def logout_view(self, request):
-#         logout(request)
-        # return redirect('login')
-
-    # def get(self, request):
-    #     logout(request)
-    #     return redirect('login')
-
-
 class FormView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, "form.html")
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        return render(request, "form.html", {'categories': categories,
+                                             'institutions': institutions})
 
 
 class ConfirmationView(View):
