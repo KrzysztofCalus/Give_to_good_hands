@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block header %}<header>{% endblock header %}
+{% block content %}
+
+    </header>
+
+    <section class="login-page">
+      <h2>Profil</h2>
+        <li><h3>Username: {{ user.username }}</h3></li>
+        <li><h3>First name: {{ user.first_name }}</h3></li>
+        <li><h3>Last name: {{ user.last_name }}</h3></li>
+        <li><h3>Email: {{ user.email }}</h3></li>
+      <h2>Przekazane dary</h2>
+        {% for donation in donations %}
+        <li><h3>Ilość worków: {{ donation.quantity }}</h3></li>
+        <li><h3>Instytucja: {{ donation.institution.name }}</h3></li>
+        <li><h3>Kategoria: {{ donation.categories.name }}</h3></li>
+        <li><h3>Termin odbioru: {{ donation.pick_up_date }} / {{ donation.pick_up_time }}</h3></li>
+            ---------------------------------
+        {% endfor %}
+    </section>
+{% endblock content %}

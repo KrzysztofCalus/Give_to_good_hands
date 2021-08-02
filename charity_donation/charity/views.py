@@ -1,13 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Sum
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 
 # Create your views here.
+from django.urls import reverse_lazy, reverse
 from django.views import View
 
-from charity.models import Donation, Institution, Category
+from .models import Donation, Institution, Category
 
 
 def logout_view(request):
@@ -67,7 +69,35 @@ class FormView(LoginRequiredMixin, View):
         return render(request, "form.html", {'categories': categories,
                                              'institutions': institutions})
 
+    def post(self, request):
+        categories = request.POST.getlist("categories")
+        bags = request.POST.get("bags")
+        organization = request.POST.get("organization")
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        postcode = request.POST.get("postcode")
+        phone = request.POST.get("phone")
+        data = request.POST.get("data")
+        time = request.POST.get("time")
+        more_info = request.POST.get("more_info")
+        user = self.request.user.id
+        for category in categories:
+            Donation.objects.create(quantity=bags, institution=organization, address=address,
+                                    phone_number=phone, city=city, zip_code=postcode,
+                                    pick_up_date=data, pick_up_time=time,
+                                    pick_up_comment=more_info,
+                                    user_id=user, categories=category)
+        return redirect('confirmation')
+
 
 class ConfirmationView(View):
     def get(self, request):
         return render(request, "form-confirmation.html")
+
+
+class ProfileView(LoginRequiredMixin, View):
+    def get(self, request):
+        users = self.request.user
+        donations = Donation.objects.filter(user_id=self.request.user.id)
+        return render(request, "profile.html", {"users": users,
+                                                "donations": donations})

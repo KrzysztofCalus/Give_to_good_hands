@@ -255,16 +255,16 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// const checkboxes = document.getElementsByName("categories");
-// const organization = document.getElementsByName("organization");
-//
-// checkboxes.forEach(function (singleCheckbox){
-//   singleCheckbox.addEventListener("click", function () {
-//     singleCheckbox.getAttribute("value");
-//     if (this.checked) {
-//     //  ;
-//     } else {
-//     //  ;
-//     }
-//   });
-// });
+const checkboxes = document.getElementsByName("categories");
+const organization = document.getElementsByName("organization");
+
+checkboxes.forEach(function (singleCheckbox){
+  singleCheckbox.addEventListener("click", function () {
+    singleCheckbox.getAttribute("value");
+    if (this.checked) {
+    //  ;
+    } else {
+    //  ;
+    }
+  });
+});

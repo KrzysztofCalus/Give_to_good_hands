@@ -14,12 +14,18 @@ TYPES = (
 class Category(models.Model):
     name = models.CharField(max_length=128)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Institution(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     type = models.CharField(choices=TYPES, default='fundacja', max_length=56)
-    categories = models.ForeignKey(Category, on_delete=models.CASCADE)
+    categories = models.ManyToManyField(Category)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Donation(models.Model):
