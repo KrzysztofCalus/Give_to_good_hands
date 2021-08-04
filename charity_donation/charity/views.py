@@ -1,23 +1,27 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-
-# Create your views here.
-from django.urls import reverse_lazy, reverse
 from django.views import View
-
 from .models import Donation, Institution, Category
 
 
+# Create your views here.
+
+
 def logout_view(request):
+    """
+    Function to logout user
+    """
     logout(request)
     return redirect('landing')
 
 
 class HomeView(View):
+    """
+    View for landing page
+    """
     def get(self, request):
         quantity = Donation.objects.aggregate(Sum('quantity'))
         institution = Institution.objects.count()
@@ -32,6 +36,9 @@ class HomeView(View):
 
 
 class RegisterView(View):
+    """
+    View allowing to register new user
+    """
     def get(self, request):
         return render(request, "register.html")
 
@@ -48,6 +55,9 @@ class RegisterView(View):
 
 
 class LoginView(View):
+    """
+    View for login in users
+    """
     def get(self, request):
         return render(request, "login.html")
 
@@ -63,6 +73,9 @@ class LoginView(View):
 
 
 class FormView(LoginRequiredMixin, View):
+    """
+    View for getting details about given away charity
+    """
     def get(self, request):
         categories = Category.objects.all()
         institutions = Institution.objects.all()
@@ -91,11 +104,17 @@ class FormView(LoginRequiredMixin, View):
 
 
 class ConfirmationView(View):
+    """
+    View for confirming charity given away
+    """
     def get(self, request):
         return render(request, "form-confirmation.html")
 
 
 class ProfileView(LoginRequiredMixin, View):
+    """
+    View for profile side of user
+    """
     def get(self, request):
         users = self.request.user
         donations = Donation.objects.filter(user_id=self.request.user.id)
